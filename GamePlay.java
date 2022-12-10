@@ -12,8 +12,8 @@ import javax.swing.Timer;
 public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
     private int score = 0;
-    private int brickY = 8;
-    private int brickX = 3;
+    private int brickY = 7;
+    private int brickX = 5;
     private MapGenerator map;
     private Timer timer;
     private int playerX = 310;
@@ -22,8 +22,9 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
     private int ballXdir = -1;
     private int ballYdir = -2;
     private boolean play = false;
+    private boolean pause = false;
     private int delay = 8;
-    private int totalBricks = brickX * brickY;
+    private int totalBricks;
 
     public GamePlay () {
         map = new MapGenerator(brickX,brickY);
@@ -42,7 +43,8 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
         graphic.fillRect(1,1,692,592);
 
         //Drawing map
-        map.draw((Graphics2D) graphic);
+        totalBricks = map.draw((Graphics2D) graphic);
+        System.out.println(totalBricks);
 
         //Setting Borders
         graphic.setColor(Color.black);
@@ -72,6 +74,10 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
             graphic.setColor(Color.white);
             graphic.setFont(new Font("serif",Font.BOLD,30));
             graphic.drawString("You Won!",260,300);
+
+            graphic.setColor(Color.white);
+            graphic.setFont(new Font("serif",Font.BOLD,30));
+            graphic.drawString("Press (Enter) to restart",230,350);
         }
 
         if(ballPosY > 570) {
@@ -81,14 +87,45 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
 
             graphic.setColor(Color.red);
             graphic.setFont(new Font("serif",Font.BOLD,30));
-            graphic.
+            graphic.drawString("Game Over, score: " + score,190,350);
+
+            graphic.setColor(Color.white);
+            graphic.setFont(new Font("serif",Font.BOLD,30));
+            graphic.drawString("Press (Enter) to restart",230,350);
         }
+
+        graphic.dispose();
     }
 
     @Override
-    public void keyPressed(KeyEvent e) {
-        // TODO Auto-generated method stub
-        
+    public void keyPressed(KeyEvent event) {
+        //
+        System.out.print("-key pressed");
+        if(event.getKeyCode()== KeyEvent.VK_RIGHT)
+        {
+            System.out.print(" right-");
+            pause = false;
+            if(playerX >= 600){
+                playerX = 600;
+
+            } else {
+                moveRight();
+            }
+
+        }
+        //
+        if(event.getKeyCode()== KeyEvent.VK_LEFT)
+        {
+            System.out.print(" left-");
+            pause = false;
+            if(playerX < 10){
+                playerX = 10;
+
+            } else {
+                moveRight();
+            }
+
+        }
     }
 
     @Override
@@ -101,6 +138,16 @@ public class GamePlay extends JPanel implements KeyListener, ActionListener {
     public void keyTyped(KeyEvent e) {
         // TODO Auto-generated method stub
         
+    }
+
+    public void moveRight(){
+        play = true;
+        playerX += 20;
+    }
+
+    public void moveLeft(){
+        play = true;
+        playerX -= 20;
     }
 
     @Override
